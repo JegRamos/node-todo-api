@@ -1,8 +1,5 @@
 const {MongoClient, ObjectID} = require('mongodb');
 
-let obj = new ObjectID();
-console.log(obj);
-
 MongoClient.connect('mongodb://localhost:27017/TodoApp', { useNewUrlParser: true }, (error, client) => {
 
     if (error) {
@@ -11,15 +8,29 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', { useNewUrlParser: true
     
     console.log('Connected to mongodb server');
     const db = client.db('TodoApp');
-   
-    db.collection('Todos').find({completed: true}).toArray()
-        .then((docs) => {
-            console.log('Todos: ');
-            console.log(JSON.stringify(docs, undefined, 2));
-        })
-        .catch((error) => {
-            console.log('Unable to fetch todos ', error);
+
+    // db.collection('Users').deleteMany({name: 'Jeg Ramos'})
+    //     .then((result) => {
+    //         console.log(result)
+    //     }). catch((error) => {
+    //         console.log('Unable to delete documents ', error);
+    //     });
+    db.collection('Users').findOneAndDelete({_id: new ObjectID('5c02390ddcf0e71d87ec50fe')})
+        .then((result) => {
+            console.log('Document deleted: ');
+            console.log(result);
+        }) .catch((error) => {
+            console.log('Unable to delete document ', error);
         });
+
+    // db.collection('Todos').find({completed: true}).toArray()
+    //     .then((docs) => {
+    //         console.log('Todos: ');
+    //         console.log(JSON.stringify(docs, undefined, 2));
+    //     })
+    //     .catch((error) => {
+    //         console.log('Unable to fetch todos ', error);
+    //     });
     
     // db.collection('Todos').insertOne({
     //     text: 'Become sad',
