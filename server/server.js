@@ -7,18 +7,30 @@ const { User } = require('./models/User');
 
 const app = express();
 
-//* Middlewares
+//? Middlewares
 app.use(bodyParser.json());
 
-//* Routes
+//? Routes
+//* POST
 app.post('/todos', (req, res) => {
-    console.log(req.body);
-    const todo = Todo({
+    // console.log(req.body);
+    let todo = Todo({
         text: req.body.text
     });
     todo.save()
         .then(doc => {
             res.send(doc);
+        })
+        .catch(err => {
+            res.status(400).send(err);
+        })
+});
+
+//* GET
+app.get('/todos', (req, res) =>{
+    Todo.find()
+        .then(todos => {
+            res.send({todos});
         })
         .catch(err => {
             res.status(400).send(err);
