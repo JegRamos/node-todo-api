@@ -1,26 +1,27 @@
 const { ObjectID } = require('mongodb');
-const { mongoose } = require('../server/db/mongoose');
+const { db } = require('../server/db/mongoose');
 const { Todo } = require('../server/models/Todo');
 const { User } = require('../server/models/User');
 
-let id = '5c0278777658fd323b94fa82';
+let id = '6c0278777658fd323b94fa82';
 
 User.findById(id)
     .then(user => {
         if (!user) {
             console.warn('User not found');
+            return db.close();
         }
         console.info('User found: ');
         console.log(JSON.stringify(user, undefined, 2));
+        db.close();
     })
     .catch(err => {
         if (!ObjectID.isValid(id)) {
             console.error('Invalid ID');
         } else {
             console.error('An error occured! ', err)
-        }
+        } db.close();
     });
-
 
 // Todo.findById(id)
 //     .then(todo => {
