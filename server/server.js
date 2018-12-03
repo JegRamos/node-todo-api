@@ -42,7 +42,7 @@ app.get('/todos/:id', (req, res) => {
     let id = req.params.id;
     if (!ObjectID.isValid(id)) {
         return res.status(404).send();
-    } 
+    }
     Todo.findById(id)
         .then(todo => {
             if (!todo) {
@@ -70,6 +70,33 @@ app.delete('/todos/:id', (req, res) => {
         })
         .catch(err => {
             res.status(400).send(err);
+        });
+});
+
+//* PATCH - /todos/:id - Update a todo
+app.patch('/todos/:id', (req, res) => {
+    let id = req.params.id;
+    let { text, completed } = req.body;
+    let body = { text, completed };
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+    if (typeof body.completed === 'boolean' && body.completed) {
+        body.completedAt = new Date().getTime();
+    } else {
+        body.completed = false;
+        body.completedAt = null;
+    }
+    Todo.findByIdAndUpdate(id, { $set: body }, { new: true, useFindAndModify: false })
+        .then(todo => {
+            if (!todo) {
+                return res.status(404).send();
+            }
+            res.status(200).send(todo);
+        })
+        .catch(err => {
+            res.status(400).send();
         });
 });
 
